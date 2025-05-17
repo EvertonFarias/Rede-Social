@@ -33,4 +33,9 @@ public class AuthService {
 
         return newUser; 
     }
+    
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
 }
