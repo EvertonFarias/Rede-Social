@@ -1,6 +1,6 @@
 package com.example.inovaTest.dtos.user;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import com.example.inovaTest.enums.GenderRole;
@@ -16,11 +16,11 @@ public class UserResponseDTO {
     private UserRole role;
     private boolean verifiedEmail;
     private GenderRole gender;
-    private Date dateOfBirth;
+    private LocalDate  dateOfBirth;
     private boolean enabled;
 
   
-    public UserResponseDTO(UUID id, String login, String email, UserRole role, boolean verifiedEmail, GenderRole gender, java.util.Date dateOfBirth, boolean enabled) {
+    public UserResponseDTO(UUID id, String login, String email, UserRole role, boolean verifiedEmail, GenderRole gender, LocalDate  dateOfBirth, boolean enabled) {
         this.id = id;
         this.login = login;
         this.email = email;

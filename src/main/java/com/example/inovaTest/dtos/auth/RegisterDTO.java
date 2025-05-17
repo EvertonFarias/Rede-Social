@@ -1,6 +1,6 @@
 package com.example.inovaTest.dtos.auth;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public record RegisterDTO(String login, String password, String email, String gender, Date birthday ) {
+public record RegisterDTO(String login, String password, String email, String gender, LocalDate  dateOfBirth ) {
 }

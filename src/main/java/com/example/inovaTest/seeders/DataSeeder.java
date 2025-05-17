@@ -2,11 +2,14 @@ package com.example.inovaTest.seeders;
 
  
  
+import java.time.LocalDate;
+
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.example.inovaTest.enums.GenderRole;
 import com.example.inovaTest.enums.UserRole;
 import com.example.inovaTest.models.UserModel;
 
@@ -42,6 +45,9 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
             admin.setEmail("admin@admin.com");
             admin.setRole(UserRole.ADMIN); // ← transforma em lista
             admin.setEnabled(true);
+            admin.setDateOfBirth(LocalDate.now());
+            admin.setGender(GenderRole.OTHER);
+            admin.setVerifiedEmail(true);
             userRepository.save(admin);
 
 

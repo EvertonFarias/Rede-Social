@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.inovaTest.enums.GenderRole;
 import com.example.inovaTest.enums.UserRole;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,10 +50,11 @@ public class UserModel implements UserDetails {
     @Enumerated(EnumType.STRING)
     private GenderRole gender;
 
-    private Date dateOfBirth;
+    @Column(nullable = false)
+    private LocalDate  dateOfBirth;
 
 
-    public UserModel(String login, String password, String email, String gender, Date dateOfBirth ){
+    public UserModel(String login, String password, String email, String gender, LocalDate  dateOfBirth ){
         this.login = login;
         this.password = password;
         this.role = UserRole.USER;

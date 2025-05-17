@@ -23,8 +23,6 @@ import com.example.inovaTest.dtos.auth.AuthenticationDTO;
 import com.example.inovaTest.dtos.auth.LoginResponseDTO;
 import com.example.inovaTest.dtos.auth.RegisterDTO;
 import com.example.inovaTest.dtos.user.UserResponseDTO;
-import com.example.inovaTest.enums.GenderRole;
-import com.example.inovaTest.enums.UserRole;
 import com.example.inovaTest.exceptions.ConflictException;
 import com.example.inovaTest.infra.security.TokenService;
 import com.example.inovaTest.models.EmailVerificationToken;
@@ -73,7 +71,7 @@ public class AuthenticationController {
             newUser.getGender(),
             newUser.getDateOfBirth(),
             newUser.isEnabled()
-        );
+            );
 
         String token = UUID.randomUUID().toString();
         EmailVerificationToken verificationToken = new EmailVerificationToken(token, newUser);
@@ -107,7 +105,6 @@ public class AuthenticationController {
             String errorMessage = e.getMessage(); 
             return ResponseEntity.badRequest().body(errorMessage);
         } catch (Exception e) { 
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the request.");
         }
     }
