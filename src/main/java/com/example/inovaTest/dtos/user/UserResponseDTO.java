@@ -1,7 +1,9 @@
 package com.example.inovaTest.dtos.user;
 
+import java.util.Date;
 import java.util.UUID;
 
+import com.example.inovaTest.enums.GenderRole;
 import com.example.inovaTest.enums.UserRole;
 
 import lombok.Data;
@@ -13,14 +15,20 @@ public class UserResponseDTO {
     private String email;
     private UserRole role;
     private boolean verifiedEmail;
+    private GenderRole gender;
+    private Date dateOfBirth;
+    private boolean enabled;
 
-    // Construtor
-    public UserResponseDTO(UUID id, String login, String email, UserRole role, boolean verifiedEmail) {
+  
+    public UserResponseDTO(UUID id, String login, String email, UserRole role, boolean verifiedEmail, GenderRole gender, java.util.Date dateOfBirth, boolean enabled) {
         this.id = id;
         this.login = login;
         this.email = email;
         this.role = role;
         this.verifiedEmail = verifiedEmail;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.enabled = enabled;
     }
 
     

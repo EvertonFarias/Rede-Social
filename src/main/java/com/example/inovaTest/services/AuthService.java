@@ -28,7 +28,7 @@ public class AuthService {
             throw new ConflictException("Email already exists.");
         }
         String encryptedPassword = passwordEncoder.encode(data.password());
-        UserModel newUser = new UserModel(data.login(), encryptedPassword, data.email());
+        UserModel newUser = new UserModel(data.login(), encryptedPassword, data.email(), data.gender(), data.birthday());
         userRepository.save(newUser);
 
         return newUser; 

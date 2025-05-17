@@ -2,6 +2,7 @@ package com.example.inovaTest.controllers;
 
 import jakarta.validation.Valid;
 
+import java.util.Date;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,6 +23,8 @@ import com.example.inovaTest.dtos.auth.AuthenticationDTO;
 import com.example.inovaTest.dtos.auth.LoginResponseDTO;
 import com.example.inovaTest.dtos.auth.RegisterDTO;
 import com.example.inovaTest.dtos.user.UserResponseDTO;
+import com.example.inovaTest.enums.GenderRole;
+import com.example.inovaTest.enums.UserRole;
 import com.example.inovaTest.exceptions.ConflictException;
 import com.example.inovaTest.infra.security.TokenService;
 import com.example.inovaTest.models.EmailVerificationToken;
@@ -66,8 +69,12 @@ public class AuthenticationController {
             newUser.getLogin(),
             newUser.getEmail(),
             newUser.getRole(),
-            newUser.isVerifiedEmail()
+            newUser.isVerifiedEmail(),
+            newUser.getGender(),
+            newUser.getDateOfBirth(),
+            newUser.isEnabled()
         );
+
         String token = UUID.randomUUID().toString();
         EmailVerificationToken verificationToken = new EmailVerificationToken(token, newUser);
         tokenRepository.save(verificationToken);

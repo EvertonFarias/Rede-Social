@@ -8,9 +8,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.inovaTest.enums.GenderRole;
 import com.example.inovaTest.enums.UserRole;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,21 +37,31 @@ public class UserModel implements UserDetails {
     @NotBlank(message = "Email is required")
     @Email(message = "Email is invalid")
     private String email;
+
     private boolean verifiedEmail;
+
     private boolean enabled;
+
 
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Enumerated(EnumType.STRING)
+    private GenderRole gender;
 
-    public UserModel(String login, String password, String email){
+    private Date dateOfBirth;
+
+
+    public UserModel(String login, String password, String email, String gender, Date dateOfBirth ){
         this.login = login;
         this.password = password;
         this.role = UserRole.USER;
         this.email = email;
         this.verifiedEmail = false;
         this.enabled = true;
+        this.gender = GenderRole.fromString(gender);
+        this.dateOfBirth = dateOfBirth;
     }
 
     @Override
