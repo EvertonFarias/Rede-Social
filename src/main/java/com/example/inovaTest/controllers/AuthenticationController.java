@@ -77,7 +77,8 @@ public class AuthenticationController {
             newUser.isVerifiedEmail(),
             newUser.getGender(),
             newUser.getDateOfBirth(),
-            newUser.isEnabled()
+            newUser.isEnabled(),
+            newUser.getProfilePicture()
             );
 
         String token = UUID.randomUUID().toString();

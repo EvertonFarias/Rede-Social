@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.inovaTest.enums.GenderRole;
 import com.example.inovaTest.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -22,6 +24,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode(of = "id")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -52,6 +55,19 @@ public class UserModel implements UserDetails {
 
     @Column(nullable = false)
     private LocalDate  dateOfBirth;
+
+    private String profilePicture; // path da foto de perfil
+
+    private String profileDescription; // bio 
+
+    @OneToMany(mappedBy = "sender")
+    @JsonIgnore
+    private List<FriendshipModel> sentFriendRequests;
+
+    @OneToMany(mappedBy = "receiver")
+    @JsonIgnore
+    private List<FriendshipModel> receivedFriendRequests;
+
 
 
     public UserModel(String login, String password, String email, String gender, LocalDate  dateOfBirth ){
@@ -95,4 +111,14 @@ public class UserModel implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
+
+
+   public List<UserModel> getFriends(List<FriendshipModel> friendships) {
+    return friendships.stream()
+        .filter(FriendshipModel::isAccepted)
+        .map(f -> f.getSender().equals(this) ? f.getReceiver() : f.getSender())
+        .toList();
+}
+
 }
