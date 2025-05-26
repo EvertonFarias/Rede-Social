@@ -137,7 +137,7 @@ public class AuthenticationController {
 
         tokenRepository.delete(verificationToken);
 
-        return ResponseEntity.ok("E-mail verificado com sucesso.");
+        return ResponseEntity.ok("E-mail verificado com sucesso. http://localhost:4200/auth/login");
     }
 
 

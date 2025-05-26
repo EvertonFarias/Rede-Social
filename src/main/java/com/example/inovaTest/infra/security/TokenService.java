@@ -35,18 +35,31 @@ public class TokenService {
     }
     
 
-    public String validateToken(String token){
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
-                    .withIssuer("auth-api")
-                    .build()
-                    .verify(token)
-                    .getSubject();
-        } catch (JWTVerificationException exception){
+public String validateToken(String token){
+    try {
+        System.out.println("=== Token Validation Debug ===");
+        System.out.println("Token recebido: " + (token != null ? "Presente" : "Nulo"));
+        
+        if (token == null || token.isEmpty()) {
+            System.out.println("Token vazio ou nulo");
             return "";
         }
+        
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        String subject = JWT.require(algorithm)
+                .withIssuer("auth-api")
+                .build()
+                .verify(token)
+                .getSubject();
+                
+        System.out.println("Token válido para usuário: " + subject);
+        return subject;
+        
+    } catch (JWTVerificationException exception){
+        System.out.println("Erro na validação do token: " + exception.getMessage());
+        return "";
     }
+}
 
     private Instant genExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));

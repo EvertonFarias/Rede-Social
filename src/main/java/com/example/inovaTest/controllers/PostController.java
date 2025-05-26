@@ -5,7 +5,9 @@ import com.example.inovaTest.dtos.user.comments.CommentRequestDto;
 import com.example.inovaTest.dtos.user.comments.CommentResponseDto;
 import com.example.inovaTest.dtos.user.posts.PostRequestDto;
 import com.example.inovaTest.dtos.user.posts.PostResponseDto;
+import com.example.inovaTest.enums.NotificationType;
 import com.example.inovaTest.models.CommentModel;
+import com.example.inovaTest.models.NotificationModel;
 import com.example.inovaTest.models.PostModel;
 import com.example.inovaTest.services.CommentService;
 import com.example.inovaTest.services.FirebaseStorageService;
@@ -19,9 +21,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.example.inovaTest.services.websocket.NotificationWebSocketService;
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +36,7 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final FirebaseStorageService firebaseStorageService;
+    private final NotificationWebSocketService notificationWebSocketService;
 
 
     
@@ -71,10 +77,28 @@ public class PostController {
     public ResponseEntity<CommentResponseDto> createComment(
             @PathVariable UUID postId,
             @RequestBody @Valid CommentRequestDto commentRequestDto) {
-        
+
         CommentResponseDto responseDto = commentService.createCommentDto(postId, commentRequestDto);
+
+        // Enviar notificação para o dono do post
+        PostModel post = postService.getPostModel(postId);
+        CommentModel comment = commentService.getCommentModel(responseDto.getId());
+
+        if (!comment.getUser().getId().equals(post.getUser().getId())) {
+            NotificationModel notification = new NotificationModel(
+                post.getUser(), // destinatário
+                comment.getUser(), // remetente
+                NotificationType.NEW_COMMENT,
+                "Novo comentário",
+                comment.getUser().getUsername() + " comentou em sua postagem.",
+                postId
+            );
+            notificationWebSocketService.sendNotification(notification);
+        }
+
         return ResponseEntity.ok(responseDto);
     }
+
 
 
     @GetMapping("/posts/{postId}/comments")

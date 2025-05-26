@@ -16,6 +16,8 @@ import com.example.inovaTest.repositories.PostRepository;
 import com.example.inovaTest.repositories.UserRepository;
 import com.google.common.base.Optional;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class CommentService {
 
@@ -75,6 +77,12 @@ public class CommentService {
         Optional<CommentModel> comment = commentRepository.findByIdAndPostId(commentId, postId);
         commentRepository.delete(comment.get());
     }
+
+    public CommentModel getCommentModel(UUID commentId) {
+    return commentRepository.findById(commentId)
+        .orElseThrow(() -> new EntityNotFoundException("Comentário não encontrado"));
+}
+
 
 }
 
