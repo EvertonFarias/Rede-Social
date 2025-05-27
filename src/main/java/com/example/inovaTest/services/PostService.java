@@ -124,5 +124,14 @@ public class PostService {
         return post;
     }
 
+    public PostResponseDto getPostResponseDto(UUID postId) {
+        PostModel post = getPostModel(postId);
+        if (post == null) {
+            throw new ResourceNotFoundException("Post não encontrado");
+        }
+        return convertToDto(post);
+
+    }
+
 
 }

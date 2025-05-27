@@ -9,12 +9,14 @@ import com.example.inovaTest.enums.NotificationType;
 import com.example.inovaTest.models.CommentModel;
 import com.example.inovaTest.models.NotificationModel;
 import com.example.inovaTest.models.PostModel;
+import com.example.inovaTest.repositories.NotificationRepository;
 import com.example.inovaTest.services.CommentService;
 import com.example.inovaTest.services.FirebaseStorageService;
 import com.example.inovaTest.services.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -37,6 +39,8 @@ public class PostController {
     private final CommentService commentService;
     private final FirebaseStorageService firebaseStorageService;
     private final NotificationWebSocketService notificationWebSocketService;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
 
     
@@ -46,6 +50,12 @@ public class PostController {
         return ResponseEntity.ok(newPost);
     }
 
+    @GetMapping("/users/posts/{postId}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable UUID postId) {
+        PostResponseDto posts = postService.getPostResponseDto(postId);
+        return ResponseEntity.ok(posts);
+    }
+    
     @GetMapping("/users/{userId}/posts")
     public ResponseEntity<List<PostResponseDto>> getUserPosts(@PathVariable UUID userId) {
         List<PostResponseDto> posts = postService.getAllPostsByUser(userId);
@@ -93,6 +103,8 @@ public class PostController {
                 comment.getUser().getUsername() + " comentou em sua postagem.",
                 postId
             );
+            notificationRepository.save(notification);
+            // Enviando notificação via WebSocket
             notificationWebSocketService.sendNotification(notification);
         }
 
