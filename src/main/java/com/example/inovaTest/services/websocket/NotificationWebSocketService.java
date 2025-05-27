@@ -24,9 +24,9 @@ public class NotificationWebSocketService {
         dto.setMessage(notification.getMessage());
         dto.setType(notification.getType());
         dto.setReferenceId(notification.getReferenceId());
-        dto.setIsRead(notification.getIsRead());
+        dto.setIsRead(notification.isRead());
         dto.setCreatedAt(notification.getCreatedAt().toString());
-
+        dto.setSenderProfilePicture(notification.getSender().getProfilePicture());
         messagingTemplate.convertAndSendToUser(
                 notification.getRecipient().getId().toString(),
                 "/queue/notifications",

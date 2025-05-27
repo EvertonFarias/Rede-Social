@@ -16,5 +16,6 @@ public class NotificationDTO {
     private NotificationType type;
     private UUID referenceId;
     private Boolean isRead;
+    private String senderProfilePicture;
     private String createdAt;
 }
