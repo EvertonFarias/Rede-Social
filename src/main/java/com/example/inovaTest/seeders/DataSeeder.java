@@ -52,6 +52,19 @@ public class DataSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
 
             System.out.println("Admin user created: " + admin.getLogin());
+            
+            UserModel user = new UserModel();
+            user.setLogin("user");
+            user.setPassword(passwordEncoder.encode("user12345"));
+            user.setEmail("user@user.com");
+            user.setRole(UserRole.USER); // ← transforma em lista
+            user.setEnabled(true);
+            user.setDateOfBirth(LocalDate.now());
+            user.setGender(GenderRole.OTHER);
+            user.setVerifiedEmail(true);
+            userRepository.save(user);
+            System.out.println("User user created: " + user.getLogin());
+
         alreadySetup = true;
     }
 }

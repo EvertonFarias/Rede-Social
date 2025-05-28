@@ -9,6 +9,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LikeRepository extends JpaRepository<LikeModel, UUID> {
-    Optional<LikeModel> findByPostAndUser(PostModel post, UserModel user);
-    long countByPost(PostModel post);
+    Optional<LikeModel> findByPostIdAndUserId(UUID postId, UUID userId);
+    boolean existsByPostIdAndUserId(UUID postId, UUID userId);
+    long countByPostId(UUID postId);
+
+    Optional<LikeModel> findByCommentIdAndUserId(UUID commentId, UUID userId);
+    boolean existsByCommentIdAndUserId(UUID commentId, UUID userId);
+    long countByCommentId(UUID commentId);
 }
+

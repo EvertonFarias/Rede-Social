@@ -17,12 +17,16 @@ public class LikeModel {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserModel user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
     private PostModel post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserModel user;
+    @JoinColumn(name = "comment_id")
+    private CommentModel comment;
 
     private LocalDateTime createdAt;
 
@@ -31,3 +35,4 @@ public class LikeModel {
         createdAt = LocalDateTime.now();
     }
 }
+

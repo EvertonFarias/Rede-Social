@@ -1,13 +1,15 @@
 package com.example.inovaTest.controllers;
 
 import com.example.inovaTest.dtos.user.posts.PostResponseDto;
-import com.example.inovaTest.models.UserModel;
-import com.example.inovaTest.repositories.UserRepository;
+
 import com.example.inovaTest.services.FeedService;
+
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +21,22 @@ import java.util.UUID;
 public class FeedController {
 
     private final FeedService feedService;
-    @Autowired
-    private UserRepository repository;
 
-    @GetMapping("/{id}")
-    public List<PostResponseDto> getFeed(@PathVariable UUID id) {
-        UserModel user  = repository.getById(id);
-        return feedService.getUserFeed(user);
+
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<PostResponseDto>> getFeed(
+            @PathVariable UUID userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+    
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<PostResponseDto> feedPage = feedService.getUserFeed(userId, pageRequest);
+        
+        System.out.println("Returning " + feedPage.getContent().size() + " posts");
+        
+        return ResponseEntity.ok(feedPage.getContent());
     }
+
+    
 }

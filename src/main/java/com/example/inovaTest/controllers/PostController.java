@@ -7,11 +7,14 @@ import com.example.inovaTest.dtos.user.posts.PostRequestDto;
 import com.example.inovaTest.dtos.user.posts.PostResponseDto;
 import com.example.inovaTest.enums.NotificationType;
 import com.example.inovaTest.models.CommentModel;
+import com.example.inovaTest.models.LikeModel;
 import com.example.inovaTest.models.NotificationModel;
 import com.example.inovaTest.models.PostModel;
 import com.example.inovaTest.repositories.NotificationRepository;
+import com.example.inovaTest.repositories.UserRepository;
 import com.example.inovaTest.services.CommentService;
 import com.example.inovaTest.services.FirebaseStorageService;
+import com.example.inovaTest.services.LikeService;
 import com.example.inovaTest.services.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +44,10 @@ public class PostController {
     private final NotificationWebSocketService notificationWebSocketService;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private LikeService likeService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     
@@ -50,9 +57,9 @@ public class PostController {
         return ResponseEntity.ok(newPost);
     }
 
-    @GetMapping("/users/posts/{postId}")
-    public ResponseEntity<PostResponseDto> getPostById(@PathVariable UUID postId) {
-        PostResponseDto posts = postService.getPostResponseDto(postId);
+    @GetMapping("/users/posts/{postId}/{userId}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable UUID postId, @PathVariable UUID userId) {
+        PostResponseDto posts = postService.getPostResponseDto(postId, userId);
         return ResponseEntity.ok(posts);
     }
     
@@ -128,4 +135,35 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+
+
+@PostMapping("/posts/{postId}/{userId}/like")
+public ResponseEntity<PostResponseDto> toggleLike(@PathVariable UUID postId, @PathVariable UUID userId) {
+    boolean isLiked = likeService.togglePostLike(postId, userId);
+
+    PostModel post = postService.getPostModel(postId);
+    Optional<com.example.inovaTest.models.UserModel> userOptional = userRepository.findById(userId);
+
+    if (userOptional.isPresent()) {
+        var sender = userOptional.get();
+        var recipient = post.getUser();
+
+        // Enviar notificação se o dono do post for diferente do usuário que curtiu
+        if (!sender.getId().equals(recipient.getId()) && isLiked) {
+            NotificationModel notification = new NotificationModel(
+                recipient, // destinatário
+                sender,    // remetente
+                NotificationType.NEW_LIKE,
+                "Nova curtida",
+                sender.getUsername() + " curtiu sua postagem.",
+                postId
+            );
+            notificationRepository.save(notification);
+            notificationWebSocketService.sendNotification(notification);
+        }
+    }
+
+    PostResponseDto updatedPost = postService.getPostResponseDto(postId, userId);
+    return ResponseEntity.ok(updatedPost);
+}
 }
