@@ -1,8 +1,10 @@
-FROM ubuntu:lastest AS build
+FROM ubuntu:latest AS build
+
 RUN apt-get update
 RUN apt-get install openjdk-23.0.1-jdk -y
-COPY . .
 RUN apt-get install maven -y
+
+COPY . .
 RUN mvn clean install
 RUN mvn package -DskipTests
 
