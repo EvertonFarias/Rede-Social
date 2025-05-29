@@ -113,7 +113,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
+<build>
   <plugins>
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
@@ -129,20 +129,33 @@
       </configuration>
     </plugin>
 
-    <!-- Plugin do Spring Boot que empacota tudo -->
+    <!-- Plugin para criar JAR executável com Main-Class -->
     <plugin>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-maven-plugin</artifactId>
-      <version>3.1.1</version>
-      <executions>
-        <execution>
-          <goals>
-            <goal>repackage</goal>
-          </goals>
-        </execution>
-      </executions>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <version>3.2.2</version>
+      <configuration>
+        <archive>
+          <manifest>
+            <mainClass>com.example.inovaTest.CalangoSocial</mainClass>
+          </manifest>
+        </archive>
+      </configuration>
     </plugin>
+	<plugin>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-maven-plugin</artifactId>
+  <version>3.1.1</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>repackage</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
   </plugins>
+  
 </build>
 
 </project>
