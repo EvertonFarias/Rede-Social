@@ -2,6 +2,7 @@ package com.example.inovaTest.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.inovaTest.dtos.auth.RegisterDTO;
@@ -17,7 +18,7 @@ public class AuthService {
 
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public UserModel registerUser(RegisterDTO data) throws ConflictException {
         // Verificar se o usuário já existe
